@@ -49,7 +49,7 @@ export const FormSchema = z.object({
 
     .max(10, { message: "Emergency Contact No. must be at least 10 digits." })
     .optional(),
-  email: z.string().email({ message: "Invalid Email address." }),
+  email: z.string().email({ message: "Invalid Email Address." }),
   address: z
     .string()
     .min(5, { message: "Address must be at least 5 characters." })
