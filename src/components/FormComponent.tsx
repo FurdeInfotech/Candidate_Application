@@ -57,9 +57,9 @@ function FormComponent() {
       languages: [],
     },
   });
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async () => {
     setIsLoading(true);
-    const formData = new FormData();
+    // const formData = new FormData();
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
