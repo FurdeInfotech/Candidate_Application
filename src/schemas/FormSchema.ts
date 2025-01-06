@@ -64,4 +64,98 @@ export const FormSchema = z.object({
   languages: z
     .array(z.string())
     .nonempty({ message: "Please select at least one language." }),
+  schoolname: z
+    .string()
+    .min(2, { message: "School Name must be at least 2 characters." })
+    .max(100, { message: "School Name must not exceed 100 characters." }),
+  sscyear: z
+    .string()
+    .min(4, { message: "Select Passing Year" })
+    .refine(
+      (value) =>
+        /^\d{4}$/.test(value) && parseInt(value) <= new Date().getFullYear(),
+      {
+        message: "Invalid Year",
+      }
+    ),
+  sscmarks: z
+    .string()
+    .min(2, { message: "Enter Percentage or CGPA " })
+    .max(10, { message: "Percentage or CGPA must not exceed 10 characters." }),
+  hscdiplomaname: z
+    .string()
+    .min(2, { message: "College Name must be at least 2 characters." })
+    .max(100, { message: "College Name must not exceed 100 characters." }),
+  hscdiplomadepartment: z
+    .string()
+    .min(2, { message: "Department must be at least 2 characters." })
+    .max(50, { message: "Department Name must not exceed 50 characters." }),
+  hscdiplomayear: z
+    .string()
+    .min(4, { message: "Select Passing Year" })
+    .refine(
+      (value) =>
+        /^\d{4}$/.test(value) && parseInt(value) <= new Date().getFullYear(),
+      {
+        message: "Invalid Year",
+      }
+    ),
+  hscdiplomamarks: z
+    .string()
+    .min(2, { message: "Enter Percentage or CGPA " })
+    .max(10, { message: "Percentage or CGPA must not exceed 10 characters." }),
+  graduationname: z
+    .string()
+
+    .max(100, { message: "College Name must not exceed 100 characters." })
+    .optional(),
+  graduationdepartment: z
+    .string()
+
+    .max(50, { message: "Department Name must not exceed 50 characters." })
+    .optional(),
+  graduationyear: z
+    .string()
+    .min(4, { message: "Select Passing Year" })
+    .refine(
+      (value) =>
+        value === "" || // Allow empty strings
+        (/^\d{4}$/.test(value) && parseInt(value) <= new Date().getFullYear()),
+      {
+        message: "Invalid Year",
+      }
+    )
+    .optional(),
+  graduationmarks: z
+    .string()
+
+    .max(10, { message: "Percentage or CGPA must not exceed 10 characters." })
+    .optional(),
+  pgraduationname: z
+    .string()
+
+    .max(100, { message: "College Name must not exceed 100 characters." })
+    .optional(),
+  pgraduationdepartment: z
+    .string()
+
+    .max(50, { message: "Department Name must not exceed 50 characters." })
+    .optional(),
+  pgraduationyear: z
+    .string()
+    .min(4, { message: "Select Passing Year" })
+    .refine(
+      (value) =>
+        value === "" || // Allow empty strings
+        (/^\d{4}$/.test(value) && parseInt(value) <= new Date().getFullYear()),
+      {
+        message: "Invalid Year",
+      }
+    )
+    .optional(),
+  pgraduationmarks: z
+    .string()
+
+    .max(10, { message: "Percentage or CGPA must not exceed 10 characters." })
+    .optional(),
 });
