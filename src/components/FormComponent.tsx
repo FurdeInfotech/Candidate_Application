@@ -376,7 +376,7 @@ function FormComponent() {
               name="languages"
               render={({ field }) => (
                 <FormItem className=" sm:col-span-1 col-span-2">
-                  <FormLabel>Languages Known*</FormLabel>
+                  <FormLabel>10. Languages Known*</FormLabel>
                   <FormControl>
                     <MultipleSelector
                       selectedValues={field.value || []}
@@ -453,7 +453,7 @@ function FormComponent() {
           />
         </div>
         <div className="flex flex-row items-center justify-center ">
-          <Button type="submit" disabled={isLoading} className=" w-40">
+          <Button type="submit" disabled={isLoading} className=" w-full sm:w-40">
             {isLoading ? (
               <>
                 <Loader2 className=" animate-spin" /> Applying
