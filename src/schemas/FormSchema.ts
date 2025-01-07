@@ -169,4 +169,21 @@ export const FormSchema = z.object({
     computerLanguages: z
     .array(z.string())
     .nonempty({ message: "Please select at least one computer language." }),
+    typingSkills: z.enum(["30 WPM", "40 WPM", "50 WPM", "Not Applicable"], {
+      required_error: "Select an option",
+    }),
+    vehicle: z.enum(["Yes", "No"], {
+      required_error: "Select an option",
+    }),
+    license: z.enum(["Yes", "No"], {
+      required_error: "Select an option",
+    }),
+    salary: z
+    .string()
+    .min(2, { message: "Salary Expectation must be at least 2 characters." })
+    .max(50, { message: "Salary Expectation must not exceed 50 characters." }),
+    capableToDoWork: z
+    .string()
+    .max(200, { message: " must not exceed 200 characters." })
+    .optional(),
 });

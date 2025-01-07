@@ -30,6 +30,7 @@ import { Textarea } from "./ui/textarea";
 import { MultipleSelector } from "./multiselector";
 import { Separator } from "./ui/separator";
 import { computerLanguagesData } from "@/lib/data";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 type FormData = z.infer<typeof FormSchema>;
 
@@ -74,7 +75,9 @@ function FormComponent() {
       referredBy: "",
       experience: "",
       courses: "",
-      computerLanguages: []
+      computerLanguages: [],
+      typingSkills: undefined,
+      vehicle: undefined,
     },
   });
   const onSubmit = async (data: FormData) => {
@@ -835,6 +838,11 @@ function FormComponent() {
                   <Input placeholder="Enter Post" {...field} />
                 </FormControl>
                 <FormMessage />
+                {!form.formState.errors.address && (
+                  <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500">
+                    Enter 'Any' if you're unsure about the specific details.
+                  </div>
+                )}
               </FormItem>
             )}
           />
@@ -912,7 +920,7 @@ function FormComponent() {
             control={form.control}
             name="computerLanguages"
             render={({ field }) => (
-              <FormItem className=" sm:col-span-1 col-span-2">
+              <FormItem className=" md:col-span-1 col-span-2">
                 <FormLabel>20. Computer Languages*</FormLabel>
                 <FormControl>
                   <MultipleSelector
@@ -924,7 +932,158 @@ function FormComponent() {
                 <FormMessage />
                 {!form.formState.errors.address && (
                   <div className="mt-1 text-right text-[10px] md:text-xs text-gray-500">
-                    Select Not Applicable if you're
+                    Choose 'Not Applicable' if none apply.
+                  </div>
+                )}
+              </FormItem>
+            )}
+          />
+
+          {/* Typing Skills */}
+          <FormField
+            control={form.control}
+            name="typingSkills"
+            render={({ field }) => (
+              <FormItem className="col-span-2 ">
+                <FormLabel>21. Typing Skills*</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-row space-x-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="30 WPM" />
+                      </FormControl>
+                      <FormLabel className="font-normal">30 WPM</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="40 WPM" />
+                      </FormControl>
+                      <FormLabel className="font-normal">40 WPM</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="30 WPM" />
+                      </FormControl>
+                      <FormLabel className="font-normal">50 WPM</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="Not Applicable" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Not Applicable
+                      </FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+            {/* Vehicle */}
+            <FormField
+            control={form.control}
+            name="vehicle"
+            render={({ field }) => (
+              <FormItem className="col-span-1 ">
+                <FormLabel>22. Own a Vehicle?*</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-row space-x-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="Yes" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Yes</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="No" />
+                      </FormControl>
+                      <FormLabel className="font-normal">No</FormLabel>
+                    </FormItem>                                    
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+           {/* license */}
+           <FormField
+            control={form.control}
+            name="license"
+            render={({ field }) => (
+              <FormItem className="col-span-1 ">
+                <FormLabel>23. License*</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-row space-x-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="Yes" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Yes</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="No" />
+                      </FormControl>
+                      <FormLabel className="font-normal">No</FormLabel>
+                    </FormItem>                                    
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+           {/* salary */}
+           <FormField
+            control={form.control}
+            name="salary"
+            render={({ field }) => (
+              <FormItem className="col-span-1 ">
+                <FormLabel>23. Salary Expectation*</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+
+           {/* capabe to do works */}
+           <FormField
+            control={form.control}
+            name="experience"
+            render={({ field }) => (
+              <FormItem className="col-span-1">
+                <FormLabel>24. Capable to do Work (Optional)</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="What work can you do?"
+                    {...field}
+                    className="inputstyle resize-none"
+                    maxLength={200}
+                  />
+                </FormControl>
+                <FormMessage />
+                {!form.formState.errors.address && (
+                  <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500">
+                    Max 200 characters
                   </div>
                 )}
               </FormItem>
