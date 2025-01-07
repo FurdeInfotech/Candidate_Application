@@ -840,7 +840,7 @@ function FormComponent() {
                 <FormMessage />
                 {!form.formState.errors.address && (
                   <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500">
-                    Enter 'Any' if you're unsure about the specific details.
+                    Enter &lsquo;Any&lsquo; if you&apos;re unsure about the specific details.
                   </div>
                 )}
               </FormItem>
@@ -932,7 +932,7 @@ function FormComponent() {
                 <FormMessage />
                 {!form.formState.errors.address && (
                   <div className="mt-1 text-right text-[10px] md:text-xs text-gray-500">
-                    Choose 'Not Applicable' if none apply.
+                    Choose &lsquo;Not Applicable&lsquo; if none apply.
                   </div>
                 )}
               </FormItem>
