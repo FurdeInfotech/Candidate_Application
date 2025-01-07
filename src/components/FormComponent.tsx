@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
 import { MultipleSelector } from "./multiselector";
 import { Separator } from "./ui/separator";
+import { computerLanguagesData } from "@/lib/data";
 
 type FormData = z.infer<typeof FormSchema>;
 
@@ -49,9 +50,6 @@ function FormComponent() {
       gender: undefined,
       contact: "",
       emergencyContact: "",
-      referredBy: "",
-      post: "",
-      department: undefined,
       maritalStatus: undefined,
       caste: "",
       address: "",
@@ -71,11 +69,18 @@ function FormComponent() {
       pgraduationdepartment: undefined,
       pgraduationyear: undefined,
       pgraduationmarks: undefined,
+      department: undefined,
+      post: "",
+      referredBy: "",
+      experience: "",
+      courses: "",
+      computerLanguages: []
     },
   });
-  const onSubmit = async () => {
+  const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     // const formData = new FormData();
+    console.log(data);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -263,7 +268,7 @@ function FormComponent() {
                 <FormLabel>5. Contact No.*</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter Contact Number"
+                    placeholder="Enter Contact No."
                     {...field}
                     maxLength={10}
                     className="inputstyle"
@@ -291,7 +296,7 @@ function FormComponent() {
                 <FormLabel>6. Emergency Contact No.</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter Emergency Contact Number"
+                    placeholder="Enter Emergency Contact No."
                     {...field}
                     maxLength={10}
                     className="inputstyle"
@@ -411,7 +416,7 @@ function FormComponent() {
             )}
           />
 
-            <Separator className=" col-span-2 md:mt-0 mt-3"/>
+          <Separator className=" col-span-2 md:mt-0 mt-3" />
 
           {/* Educational Qualifications */}
           <h1 className=" font-semibold">Educational Qualification</h1>
@@ -441,9 +446,7 @@ function FormComponent() {
                 name="sscyear"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-2">
-                    <FormLabel className=" ">
-                      Passing Year*
-                    </FormLabel>
+                    <FormLabel className=" ">Passing Year*</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
@@ -474,9 +477,7 @@ function FormComponent() {
                 name="sscmarks"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-2">
-                    <FormLabel className="  ">
-                      Percentage / CGPA*
-                    </FormLabel>
+                    <FormLabel className="  ">Percentage / CGPA*</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g. 90% | CGPA 9.50"
@@ -502,9 +503,7 @@ function FormComponent() {
                 name="hscdiplomaname"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-4">
-                    <FormLabel className="  ">
-                      12. HSC / Diploma*
-                    </FormLabel>
+                    <FormLabel className="  ">12. HSC / Diploma*</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter College Name"
@@ -522,9 +521,7 @@ function FormComponent() {
                 name="hscdiplomadepartment"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-4">
-                    <FormLabel className="  ">
-                      Department*
-                    </FormLabel>
+                    <FormLabel className="  ">Department*</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter Department"
@@ -542,9 +539,7 @@ function FormComponent() {
                 name="hscdiplomayear"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-2">
-                    <FormLabel className=" ">
-                      Passing Year*
-                    </FormLabel>
+                    <FormLabel className=" ">Passing Year*</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
@@ -575,9 +570,7 @@ function FormComponent() {
                 name="hscdiplomamarks"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-2">
-                    <FormLabel className="  ">
-                      Percentage / CGPA*
-                    </FormLabel>
+                    <FormLabel className="  ">Percentage / CGPA*</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g. 90% | CGPA 9.50"
@@ -604,9 +597,7 @@ function FormComponent() {
                 name="graduationname"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-4">
-                    <FormLabel className="  ">
-                      13. Graduation
-                    </FormLabel>
+                    <FormLabel className="  ">13. Graduation</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter College Name"
@@ -646,9 +637,7 @@ function FormComponent() {
                 name="graduationyear"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-2">
-                    <FormLabel className=" ">
-                      Passing Year
-                    </FormLabel>
+                    <FormLabel className=" ">Passing Year</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={(value) =>
@@ -681,9 +670,7 @@ function FormComponent() {
                 name="graduationmarks"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-2">
-                    <FormLabel className="  ">
-                      Percentage / CGPA
-                    </FormLabel>
+                    <FormLabel className="  ">Percentage / CGPA</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g. 90% | CGPA 9.50"
@@ -711,9 +698,7 @@ function FormComponent() {
                 name="pgraduationname"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-4">
-                    <FormLabel className="  ">
-                      14. Post Graduation
-                    </FormLabel>
+                    <FormLabel className="  ">14. Post Graduation</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter College Name"
@@ -753,9 +738,7 @@ function FormComponent() {
                 name="pgraduationyear"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-2">
-                    <FormLabel className=" ">
-                      Passing Year
-                    </FormLabel>
+                    <FormLabel className=" ">Passing Year</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={(value) =>
@@ -788,9 +771,7 @@ function FormComponent() {
                 name="pgraduationmarks"
                 render={({ field }) => (
                   <FormItem className=" md:col-span-1 col-span-2">
-                    <FormLabel className="  ">
-                      Percentage / CGPA
-                    </FormLabel>
+                    <FormLabel className="  ">Percentage / CGPA</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g. 90% | CGPA 9.50"
@@ -811,7 +792,7 @@ function FormComponent() {
             </div>
           </div>
 
-          <Separator className=" col-span-2 md:mt-0 mt-3"/>
+          <Separator className=" col-span-2 md:mt-0 mt-3" />
 
           <h1 className=" font-semibold col-span-2">Work and Experience</h1>
 
@@ -869,6 +850,83 @@ function FormComponent() {
                   <Input placeholder="Enter Referrer's Name" {...field} />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Experience */}
+          <FormField
+            control={form.control}
+            name="experience"
+            render={({ field }) => (
+              <FormItem className="md:col-span-1 col-span-2">
+                <FormLabel>18. Experience*</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Enter Your Prior Experience"
+                    {...field}
+                    className="inputstyle resize-none"
+                    maxLength={200}
+                  />
+                </FormControl>
+                <FormMessage />
+                {!form.formState.errors.address && (
+                  <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500">
+                    Fresher kindly enter N/A | Max 200 characters
+                  </div>
+                )}
+              </FormItem>
+            )}
+          />
+
+          {/* Courses */}
+          <FormField
+            control={form.control}
+            name="courses"
+            render={({ field }) => (
+              <FormItem className=" md:col-span-1 col-span-2">
+                <FormLabel>
+                  19. Computer Basic Skills / Other Courses*
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Enter Courses Done"
+                    {...field}
+                    className="inputstyle resize-none"
+                    maxLength={200}
+                  />
+                </FormControl>
+                <FormMessage />
+                {!form.formState.errors.address && (
+                  <div className="mt-1 text-right text-[10px] md:text-xs text-gray-500">
+                    Enter courses separated with commas e.g. MS-CIT, Excel |
+                    Enter N/A if no courses have been completed.
+                  </div>
+                )}
+              </FormItem>
+            )}
+          />
+
+          {/* Computer Languages */}
+          <FormField
+            control={form.control}
+            name="computerLanguages"
+            render={({ field }) => (
+              <FormItem className=" sm:col-span-1 col-span-2">
+                <FormLabel>20. Computer Languages*</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    selectedValues={field.value || []}
+                    onChange={field.onChange}
+                    options={computerLanguagesData}
+                  />
+                </FormControl>
+                <FormMessage />
+                {!form.formState.errors.address && (
+                  <div className="mt-1 text-right text-[10px] md:text-xs text-gray-500">
+                    Select Not Applicable if you're
+                  </div>
+                )}
               </FormItem>
             )}
           />

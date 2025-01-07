@@ -37,7 +37,7 @@ export function MultipleSelector({
   const [open, setOpen] = React.useState(false);
 
   const handleSetValue = (val: string) => {
-    if (selectedValues.includes(val)) {
+    if (selectedValues.includes(val.toUpperCase())) {
       onChange(selectedValues.filter((item) => item !== val));
     } else {
       onChange([...selectedValues, val]);
@@ -51,9 +51,9 @@ export function MultipleSelector({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full inputstyle hover:bg-transparent justify-between"
+          className="w-full h-auto inputstyle hover:bg-transparent justify-between"
         >
-          <div className={`${selectedValues.length > 0 ? "md:overflow-x-hidden overflow-x-scroll" : " overflow-x-hidden"} flex gap-2 justify-start `}>
+          <div className={`${selectedValues.length > 0 ? "md:overflow-x-hidden overflow-x-scroll" : ""} flex flex-wrap gap-2 justify-start `}>
             {selectedValues.length > 0
               ? selectedValues.map((val, i) => (
                   <div
@@ -63,7 +63,7 @@ export function MultipleSelector({
                     {options.find((option) => option.value === val)?.label}
                   </div>
                 ))
-              : "Select Languages Known"}
+              : "Select Languages"}
           </div>
           <ChevronsUpDown className={`${selectedValues.length > 0 ? "hidden" : "block"} ml-2 h-4 w-4 shrink-0 opacity-50`} />
         </Button>

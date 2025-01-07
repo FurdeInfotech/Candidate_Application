@@ -158,4 +158,15 @@ export const FormSchema = z.object({
 
     .max(10, { message: "Percentage or CGPA must not exceed 10 characters." })
     .optional(),
+  experience: z
+    .string()
+    .min(2, { message: "Experience must be at least 5 characters." })
+    .max(200, { message: "Experience must not exceed 200 characters." }),
+  courses: z
+    .string()
+    .min(2, { message: "Courses must be at least 5 characters." })
+    .max(200, { message: "Courses must not exceed 200 characters." }),
+    computerLanguages: z
+    .array(z.string())
+    .nonempty({ message: "Please select at least one computer language." }),
 });
