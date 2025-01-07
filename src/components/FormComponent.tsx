@@ -31,6 +31,8 @@ import { MultipleSelector } from "./multiselector";
 import { Separator } from "./ui/separator";
 import { computerLanguagesData } from "@/lib/data";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { formatDateToDDMMYYYY } from "@/helpers/formatDateToDDMMYYYY";
+import toast from "react-hot-toast";
 
 type FormData = z.infer<typeof FormSchema>;
 
@@ -80,13 +82,123 @@ function FormComponent() {
       vehicle: undefined,
       license: undefined,
       salary: "",
-      capableToDoWork: ""
+      capableToDoWork: "",
     },
+    mode: "onBlur",
   });
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
-    // const formData = new FormData();
-    console.log(data);
+    try {
+      const formData = new FormData();
+
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("dob", data.dob ? formatDateToDDMMYYYY(data.dob) : "");
+      formData.append("gender", data.gender);
+      formData.append("contact", data.contact);
+      formData.append("emergencyContact", data.emergencyContact || "");
+      formData.append("maritalStatus", data.maritalStatus);
+      formData.append("caste", data.caste);
+      formData.append("address", data.address);
+      formData.append("schoolname", data.schoolname);
+      formData.append("sscyear", data.sscyear);
+      formData.append("sscmarks", data.sscmarks);
+      formData.append("hscdiplomaname", data.hscdiplomaname);
+      formData.append("hscdiplomadepartment", data.hscdiplomadepartment);
+      formData.append("hscdiplomayear", data.hscdiplomayear);
+      formData.append("hscdiplomamarks", data.hscdiplomamarks);
+      formData.append("graduationname", data.graduationname || "");
+      formData.append("graduationdepartment", data.graduationdepartment || "");
+      formData.append("graduationyear", data.graduationyear || "");
+      formData.append("graduationmarks", data.graduationmarks || "");
+      formData.append("pgraduationname", data.pgraduationname || "");
+      formData.append(
+        "pgraduationdepartment",
+        data.pgraduationdepartment || ""
+      );
+      formData.append("pgraduationyear", data.pgraduationyear || "");
+      formData.append("pgraduationmarks", data.pgraduationmarks || "");
+      formData.append("department", data.department);
+      formData.append("post", data.post);
+      formData.append("department", data.department);
+      formData.append("referredBy", data.referredBy || "");
+      formData.append("experience", data.experience);
+      formData.append("courses", data.courses);
+      formData.append("typingSkills", data.typingSkills);
+      formData.append("vehicle", data.vehicle);
+      formData.append("license", data.license);
+      formData.append("salary", data.salary);
+      formData.append("capableToDoWork", data.capableToDoWork || "");
+
+      if (data.languages && data.languages.length > 0) {
+        formData.append("languages", data.languages.join(","));
+      } else {
+        formData.append("languages", "");
+      }
+
+      if (data.computerLanguages && data.computerLanguages.length > 0) {
+        formData.append("computerLanguages", data.computerLanguages.join(","));
+      } else {
+        formData.append("computerLanguages", "");
+      }
+
+      // Save data to Google Sheets
+      // await fetch("/api/save-to-sheets", {
+      //   method: "POST",
+      //   body: JSON.stringify(data),
+      // });
+
+      // Generate PDF
+      const pdfResponse = await fetch("/api/generate-pdf", {
+        method: "POST",
+        body: formData, // The browser automatically sets the Content-Type
+      });
+      if (pdfResponse.ok) {
+        const blob = await pdfResponse.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "application.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url); // Free memory
+      } else {
+        console.error("Failed to generate PDF:", await pdfResponse.text());
+      }
+      
+      
+
+      // Send Email
+      // await fetch("/api/send-email", {
+      //   method: "POST",
+      //   body: JSON.stringify({ email: data.email, pdfBuffer }),
+      // });
+
+      toast.success("Successfully submitted!", {
+        style: {
+          border: "1px solid #252525",
+          padding: "16px",
+          fontWeight: 600,
+          backgroundColor: "#fafafa",
+        },
+        duration: 5000,
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error(`Failed ${error}`, {
+        style: {
+          border: "1px solid #252525",
+          padding: "16px",
+          fontWeight: 600,
+
+          backgroundColor: "#fee2e2",
+        },
+        duration: 5000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,12 +224,13 @@ function FormComponent() {
         className="space-y-7 mt-14 flex flex-col"
       >
         <div className=" flex flex-row justify-between items-center">
-        <h1 className=" font-semibold">Personal Details</h1>
-        <p className="text-neutral-800 md:text-base text-sm">
-        Fields with an asterisk <span className="font-bold text-neutral-950">*</span> are required.
-        </p>
+          <h1 className=" font-semibold">Personal Details</h1>
+          <p className="text-neutral-600 md:text-base text-sm">
+            Fields with an asterisk{" "}
+            <span className="font-bold text-neutral-950">*</span> are required.
+          </p>
         </div>
-        
+
         <div className="grid grid-cols-2 md:gap-12 gap-6">
           {/* Name */}
           <FormField
@@ -324,7 +437,7 @@ function FormComponent() {
                 </FormControl>
                 <FormMessage />
                 {!form.formState.errors.address && (
-                  <div className="mt-1 text-right md:text-xs text-[10px]  ">
+                  <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500 ">
                     (Optional)
                   </div>
                 )}
@@ -396,7 +509,7 @@ function FormComponent() {
                 </FormControl>
                 <FormMessage />
                 {!form.formState.errors.address && (
-                  <div className="mt-1 text-right md:text-xs text-[10px]  ">
+                  <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500 ">
                     Max 200 characters
                   </div>
                 )}
@@ -499,7 +612,7 @@ function FormComponent() {
                     </FormControl>
                     <FormMessage />
                     {!form.formState.errors.address && (
-                      <div className="mt-1 text-right text-[10px] md:text-xs  ">
+                      <div className="mt-1 text-right text-[10px] md:text-xs text-gray-500 ">
                         Enter your Percentage or CGPA
                       </div>
                     )}
@@ -592,7 +705,7 @@ function FormComponent() {
                     </FormControl>
                     <FormMessage />
                     {!form.formState.errors.address && (
-                      <div className="mt-1 text-right text-[10px] md:text-xs  ">
+                      <div className="mt-1 text-right text-[10px] md:text-xs text-gray-500 ">
                         Enter your Percentage or CGPA
                       </div>
                     )}
@@ -693,7 +806,7 @@ function FormComponent() {
                     </FormControl>
                     <FormMessage />
                     {!form.formState.errors.address && (
-                      <div className="mt-1 text-right text-[10px] md:text-xs  ">
+                      <div className="mt-1 text-right text-[10px] md:text-xs text-gray-500 ">
                         Enter your Percentage or CGPA
                       </div>
                     )}
@@ -794,7 +907,7 @@ function FormComponent() {
                     </FormControl>
                     <FormMessage />
                     {!form.formState.errors.address && (
-                      <div className="mt-1 text-right md:text-xs text-[10px]  ">
+                      <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500 ">
                         Enter your Percentage or CGPA
                       </div>
                     )}
@@ -849,7 +962,8 @@ function FormComponent() {
                 <FormMessage />
                 {!form.formState.errors.address && (
                   <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500">
-                    Enter &lsquo;Any&lsquo; if you&apos;re unsure about the specific details.
+                    Enter &lsquo;Any&lsquo; if you&apos;re unsure about the
+                    specific details.
                   </div>
                 )}
               </FormItem>
@@ -994,8 +1108,8 @@ function FormComponent() {
             )}
           />
 
-            {/* Vehicle */}
-            <FormField
+          {/* Vehicle */}
+          <FormField
             control={form.control}
             name="vehicle"
             render={({ field }) => (
@@ -1018,7 +1132,7 @@ function FormComponent() {
                         <RadioGroupItem value="No" />
                       </FormControl>
                       <FormLabel className="font-normal">No</FormLabel>
-                    </FormItem>                                    
+                    </FormItem>
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
@@ -1026,8 +1140,8 @@ function FormComponent() {
             )}
           />
 
-           {/* license */}
-           <FormField
+          {/* license */}
+          <FormField
             control={form.control}
             name="license"
             render={({ field }) => (
@@ -1050,7 +1164,7 @@ function FormComponent() {
                         <RadioGroupItem value="No" />
                       </FormControl>
                       <FormLabel className="font-normal">No</FormLabel>
-                    </FormItem>                                    
+                    </FormItem>
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
@@ -1058,8 +1172,8 @@ function FormComponent() {
             )}
           />
 
-           {/* salary */}
-           <FormField
+          {/* salary */}
+          <FormField
             control={form.control}
             name="salary"
             render={({ field }) => (
@@ -1073,9 +1187,8 @@ function FormComponent() {
             )}
           />
 
-
-           {/* capabe to do works */}
-           <FormField
+          {/* capabe to do works */}
+          <FormField
             control={form.control}
             name="capableToDoWork"
             render={({ field }) => (
