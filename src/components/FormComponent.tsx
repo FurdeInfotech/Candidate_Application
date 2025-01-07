@@ -111,7 +111,13 @@ function FormComponent() {
         onSubmit={form.handleSubmit(onSubmit, onError)}
         className="space-y-7 mt-14 flex flex-col"
       >
+        <div className=" flex flex-row justify-between items-center">
         <h1 className=" font-semibold">Personal Details</h1>
+        <p className="text-neutral-800 md:text-base text-sm">
+        Fields with an asterisk <span className="font-bold text-neutral-950">*</span> are required.
+        </p>
+        </div>
+        
         <div className="grid grid-cols-2 md:gap-12 gap-6">
           {/* Name */}
           <FormField
