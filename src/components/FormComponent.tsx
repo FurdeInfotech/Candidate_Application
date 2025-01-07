@@ -78,6 +78,9 @@ function FormComponent() {
       computerLanguages: [],
       typingSkills: undefined,
       vehicle: undefined,
+      license: undefined,
+      salary: "",
+      capableToDoWork: ""
     },
   });
   const onSubmit = async (data: FormData) => {
@@ -944,7 +947,7 @@ function FormComponent() {
             control={form.control}
             name="typingSkills"
             render={({ field }) => (
-              <FormItem className="col-span-2 ">
+              <FormItem className="col-span-2 space-y-3 md:pb-0 pb-2">
                 <FormLabel>21. Typing Skills*</FormLabel>
                 <FormControl>
                   <RadioGroup
@@ -990,7 +993,7 @@ function FormComponent() {
             control={form.control}
             name="vehicle"
             render={({ field }) => (
-              <FormItem className="col-span-1 ">
+              <FormItem className="col-span-1 space-y-3 md:pb-0 pb-2">
                 <FormLabel>22. Own a Vehicle?*</FormLabel>
                 <FormControl>
                   <RadioGroup
@@ -1022,7 +1025,7 @@ function FormComponent() {
             control={form.control}
             name="license"
             render={({ field }) => (
-              <FormItem className="col-span-1 ">
+              <FormItem className="col-span-1 space-y-3 md:pb-0 pb-2">
                 <FormLabel>23. License*</FormLabel>
                 <FormControl>
                   <RadioGroup
@@ -1054,7 +1057,7 @@ function FormComponent() {
             control={form.control}
             name="salary"
             render={({ field }) => (
-              <FormItem className="col-span-1 ">
+              <FormItem className="md:col-span-1 col-span-2">
                 <FormLabel>23. Salary Expectation*</FormLabel>
                 <FormControl>
                   <Input placeholder="Enter Name" {...field} />
@@ -1068,9 +1071,9 @@ function FormComponent() {
            {/* capabe to do works */}
            <FormField
             control={form.control}
-            name="experience"
+            name="capableToDoWork"
             render={({ field }) => (
-              <FormItem className="col-span-1">
+              <FormItem className="md:col-span-1 col-span-2">
                 <FormLabel>24. Capable to do Work (Optional)</FormLabel>
                 <FormControl>
                   <Textarea
