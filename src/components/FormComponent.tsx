@@ -959,25 +959,25 @@ function FormComponent() {
                       <FormControl>
                         <RadioGroupItem value="30 WPM" />
                       </FormControl>
-                      <FormLabel className="font-normal text-xs">30 WPM</FormLabel>
+                      <FormLabel className="font-normal">30 WPM</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value="40 WPM" />
                       </FormControl>
-                      <FormLabel className="font-normal text-xs">40 WPM</FormLabel>
+                      <FormLabel className="font-normal">40 WPM</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value="50 WPM" />
                       </FormControl>
-                      <FormLabel className="font-normal text-xs">50 WPM</FormLabel>
+                      <FormLabel className="font-normal">50 WPM</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value="Not Applicable" />
                       </FormControl>
-                      <FormLabel className="font-normal text-xs">
+                      <FormLabel className="font-normal">
                         Not Applicable
                       </FormLabel>
                     </FormItem>
