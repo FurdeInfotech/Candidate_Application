@@ -2,6 +2,12 @@ import puppeteer from "puppeteer";
 
 export async function POST(request: Request) {
   let browser; // Declare browser variable for proper cleanup
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, "0");
+  const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const yyyy = today.getFullYear();
+
+  const formattedDate = `${dd}/${mm}/${yyyy}`;
   try {
     // Convert FormData to JSON
     const formData = await request.formData();
@@ -28,7 +34,7 @@ export async function POST(request: Request) {
 
     // Prepare HTML content
     const htmlContent = `
-     <html>
+    <html>
   <head>
     <style>
       body {
@@ -40,7 +46,7 @@ export async function POST(request: Request) {
         font-weight: 600;
       }
       p {
-        font-size: 13.5px;
+        font-size: 15px;
         font-weight: 600;
       }
       span{
@@ -62,8 +68,8 @@ export async function POST(request: Request) {
         padding: 8px;
         text-align: left;
       }
-         th{
-        font-size: 13.5px;
+         th,td{
+        font-size: 15px;
       }
     </style>
   </head>
@@ -71,21 +77,14 @@ export async function POST(request: Request) {
     <div style="border: 2px solid #000; padding: 20px 20px; min-height: 1035px;">
       <h1 style="text-align: center">Candidate Application Form</h1>
 
-      <p style="text-align: right">Date: ${new Date().toLocaleDateString()}</p>
+      <p style="text-align: right">Date: ${formattedDate}</p>
 
       <p>Reference: <span>${data.referredBy}</span> </p>
       <br />
-      <div
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: -10px;
-        "
-      >
+      
         <p>1. Name: <span>${data.name}</span></p>
-        <p>Email ID: <span>${data.email}</span></p>
-      </div>
+        <p style="margin-top: 20px">2. Email ID: <span>${data.email}</span></p>
+     
       <div
         style="
           display: flex;
@@ -94,8 +93,10 @@ export async function POST(request: Request) {
           margin-top: -10px;
         "
       >
-        <p>2. Contact: <span>${data.contact}</span></p>
-        <p>Emergency Contact No: <span>${data.emergencyContact || "N/A"}</span></p>
+        <p>3. Contact: <span>${data.contact}</span></p>
+        <p>Emergency Contact No: <span>${
+          data.emergencyContact || "N/A"
+        }</span></p>
       </div>
 
       <div
@@ -106,7 +107,7 @@ export async function POST(request: Request) {
           margin-top: -10px;
         "
       >
-        <p>3. Date of birth: <span>${data.dob}</span></p>
+        <p>4. Date of birth: <span>${data.dob}</span></p>
         <p>Gender: <span>${data.gender}</span></p>
       </div>
       <div
@@ -117,13 +118,17 @@ export async function POST(request: Request) {
           margin-top: -10px;
         "
       >
-        <p>4. Marital Status: <span>${data.maritalStatus}</span></p>
+        <p>5. Marital Status: <span>${data.maritalStatus}</span></p>
         <p>Caste: <span>${data.caste}</span></p>
       </div>
-      <p style="margin-top: 5px">5. Residential Address: <span>${data.address}</span></p>
-      <p style="margin-top: 5px">6. Languages Known: <span>${data.languages}</span></p>
-      <p style="margin-top: 5px">7. Educational Qualification :-</p>
-      <table>
+      <p style="margin-top: 5px">6. Residential Address: <span>${
+        data.address
+      }</span></p>
+      <p style="margin-top: 18px">7. Languages Known: <span>${
+        data.languages
+      }</span></p>
+      <p style="margin-top: 18px">8. Educational Qualification :-</p>
+      <table style="margin-bottom: 25px">
         <tr>
           <th>Sr. No.</th>
           <th>Education</th>
@@ -165,20 +170,19 @@ export async function POST(request: Request) {
           <td>${data.pgraduationmarks || "N/A"}</td>
         </tr>
       </table>
-      <p style="margin-top: 0px">8. Experience: <span>${data.experience}</span></p>
-      <div
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: -10px;
-        "
-      >
-        <p>9. Computer Basic Skills / Other Skills: <span>${data.courses}</span></p>
-        <p>Typing Skills (English): <span>${data.typingSkills}</span></p>
-      </div>
-      <p style="margin-top: 5px">
-        10. Computer Languages: <span>${data.computerLanguages}</span>
+      <p style="margin-top: 0px">9. Experience: <span>${
+        data.experience
+      }</span></p>
+      
+        <p style="margin-top: 18px">10. Computer Basic Skills / Other Skills: <span>${
+          data.courses
+        }</span></p>
+        <p style="margin-top: 18px">11. Typing Skills (English): <span>${
+          data.typingSkills
+        }</span></p>
+     
+      <p style="margin-top: 18px">
+        12. Computer Languages: <span>${data.computerLanguages}</span>
       </p>
       <div
         style="
@@ -188,12 +192,16 @@ export async function POST(request: Request) {
           margin-top: -10px;
         "
       >
-        <p>11. Own a Vehicle ?: <span>${data.vehicle}</span></p>
+        <p>13. Own a Vehicle ?: <span>${data.vehicle}</span></p>
         <p>License: <span>${data.license}</span></p>
       </div>
       
-      <p style="margin-top: 5px">12. Salary Expectations: <span>${data.salary}</span></p>
-      <p style="margin-top: 5px">13. Capable to do Works: <span>${data.capableToDoWork}</span></p>
+      <p style="margin-top: 5px">14. Salary Expectations: <span>${
+        data.salary
+      }</span></p>
+      <p style="margin-top: 18px">15. Capable to do Works: <span>${
+        data.capableToDoWork
+      }</span></p>
     
     </div>
   </body>
@@ -217,7 +225,7 @@ export async function POST(request: Request) {
         "Content-Disposition": "attachment; filename=application.pdf",
       },
     });
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Error in PDF generation:", error);
 
     // Ensure browser is closed in case of an error
@@ -226,7 +234,10 @@ export async function POST(request: Request) {
     }
 
     return new Response(
-      JSON.stringify({ error: "Failed to generate PDF", details: error.message }),
+      JSON.stringify({
+        error: "Failed to generate PDF",
+        details: error.message,
+      }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

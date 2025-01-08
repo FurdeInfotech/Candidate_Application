@@ -131,59 +131,94 @@ function FormComponent() {
       formData.append("capableToDoWork", data.capableToDoWork || "");
 
       if (data.languages && data.languages.length > 0) {
-        formData.append("languages", data.languages.join(","));
+        formData.append("languages", data.languages.join(", "));
       } else {
         formData.append("languages", "");
       }
 
       if (data.computerLanguages && data.computerLanguages.length > 0) {
-        formData.append("computerLanguages", data.computerLanguages.join(","));
+        formData.append("computerLanguages", data.computerLanguages.join(", "));
       } else {
         formData.append("computerLanguages", "");
       }
 
       // Save data to Google Sheets
-      // await fetch("/api/save-to-sheets", {
-      //   method: "POST",
-      //   body: JSON.stringify(data),
-      // });
+      const googleSheetResponse = await fetch("/api/save-to-sheets", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!googleSheetResponse.ok) {
+        toast.error(`Please try again.`, {
+          style: {
+            border: "1px solid #252525",
+            padding: "16px",
+            fontWeight: 600,
+
+            backgroundColor: "#fee2e2",
+          },
+          duration: 5000,
+        });
+      }
 
       // Generate PDF
       const pdfResponse = await fetch("/api/generate-pdf", {
         method: "POST",
-        body: formData, // The browser automatically sets the Content-Type
+        body: formData, // Sends form data to generate the PDF
       });
-      if (pdfResponse.ok) {
-        const blob = await pdfResponse.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "application.pdf";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url); // Free memory
-      } else {
-        console.error("Failed to generate PDF:", await pdfResponse.text());
+      const pdfBuffer = await pdfResponse.arrayBuffer();
+
+      if (!pdfResponse.ok) {
+        toast.error(`Please try again.`, {
+          style: {
+            border: "1px solid #252525",
+            padding: "16px",
+            fontWeight: 600,
+
+            backgroundColor: "#fee2e2",
+          },
+          duration: 5000,
+        });
       }
-      
-      
 
       // Send Email
-      // await fetch("/api/send-email", {
-      //   method: "POST",
-      //   body: JSON.stringify({ email: data.email, pdfBuffer }),
-      // });
-
-      toast.success("Successfully submitted!", {
-        style: {
-          border: "1px solid #252525",
-          padding: "16px",
-          fontWeight: 600,
-          backgroundColor: "#fafafa",
-        },
-        duration: 5000,
+      const sendEmailResponse = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }, // Explicitly set JSON Content-Type
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          pdfBuffer: Array.from(new Uint8Array(pdfBuffer)),
+        }), // Convert ArrayBuffer to an array
       });
+
+      if (!sendEmailResponse.ok) {
+        toast.error(`Please try again.`, {
+          style: {
+            border: "1px solid #252525",
+            padding: "16px",
+            fontWeight: 600,
+
+            backgroundColor: "#fee2e2",
+          },
+          duration: 5000,
+        });
+      }
+
+      if (sendEmailResponse.ok && pdfResponse.ok && googleSheetResponse.ok) {
+        toast.success("Successfully submitted!", {
+          style: {
+            border: "1px solid #252525",
+            padding: "16px",
+            fontWeight: 600,
+            backgroundColor: "#fafafa",
+          },
+          duration: 5000,
+        });
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error(`Failed ${error}`, {
@@ -994,7 +1029,7 @@ function FormComponent() {
                 <FormLabel>18. Experience*</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Enter Your Prior Experience"
+                    placeholder="Enter Experience (Company Name, Duration, Designation)"
                     {...field}
                     className="inputstyle resize-none"
                     maxLength={200}
@@ -1003,7 +1038,8 @@ function FormComponent() {
                 <FormMessage />
                 {!form.formState.errors.address && (
                   <div className="mt-1 text-right md:text-xs text-[10px] text-gray-500">
-                    Fresher kindly enter N/A | Max 200 characters
+                    Enter Company Name, Duration, Designation | Fresher kindly
+                    enter N/A
                   </div>
                 )}
               </FormItem>
