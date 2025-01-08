@@ -219,6 +219,7 @@ function FormComponent() {
           duration: 5000,
         });
       }
+      form.reset()
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error(`Failed ${error}`, {

@@ -225,7 +225,7 @@ export async function POST(request: Request) {
         "Content-Disposition": "attachment; filename=application.pdf",
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in PDF generation:", error);
 
     // Ensure browser is closed in case of an error
@@ -236,7 +236,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error: "Failed to generate PDF",
-        details: error.message,
+        details: error,
       }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
