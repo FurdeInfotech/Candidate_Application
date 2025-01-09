@@ -44,7 +44,7 @@ const Page: React.FC = () => {
         <Button
           size="sm"
           variant="outline"
-          className=" mr-5"
+          className=" mr-5 md:block hidden"
           onClick={handleClose}
         >
           Close
