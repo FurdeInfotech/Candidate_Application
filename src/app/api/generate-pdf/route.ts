@@ -1,7 +1,7 @@
-import puppeteer from "puppeteer";
+import puppeteer, { Browser } from "puppeteer";
 
 export async function POST(request: Request) {
-  let browser; // Declare browser variable for proper cleanup
+  let browser: Browser | null = null;
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
     browser = await puppeteer.launch({
       headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"], // Recommended for server environments
+      executablePath: puppeteer.executablePath(), // Use the Chromium bundled with Puppeteer
     });
 
     const page = await browser.newPage();
