@@ -1,9 +1,10 @@
+import puppeteer from "puppeteer";
+import type { Browser } from "puppeteer";
 
-import puppeteer from "puppeteer-core";
-import chromium from "chrome-aws-lambda";
 
 export async function POST(request: Request) {
-  let browser: puppeteer.Browser | null = null;
+  let browser: Browser | null = null;
+
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
@@ -25,12 +26,12 @@ export async function POST(request: Request) {
     console.log("Received Data:", data);
 
     // Launch Puppeteer with timeout and error handling
-     // Launch Puppeteer
-     browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath || undefined,
-      headless: chromium.headless,
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Recommended for server environments
+      executablePath: puppeteer.executablePath(), // Use the Chromium bundled with Puppeteer
     });
+
     const page = await browser.newPage();
 
     // Set a higher timeout for Puppeteer (60 seconds)
