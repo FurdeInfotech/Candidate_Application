@@ -222,7 +222,7 @@ function FormComponent() {
         });
       }
       form.reset()
-      router.replace("/success")
+      router.replace("/success-application")
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error(`Failed ${error}`, {
