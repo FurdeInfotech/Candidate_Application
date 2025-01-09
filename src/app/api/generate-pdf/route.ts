@@ -1,16 +1,14 @@
-import puppeteer from "puppeteer";
-import type { Browser } from "puppeteer";
-
+import fs from "fs/promises";
+import * as pdf from "html-pdf-node";
 
 export async function POST(request: Request) {
-  let browser: Browser | null = null;
-
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
   const yyyy = today.getFullYear();
 
   const formattedDate = `${dd}/${mm}/${yyyy}`;
+
   try {
     // Convert FormData to JSON
     const formData = await request.formData();
@@ -24,18 +22,6 @@ export async function POST(request: Request) {
 
     // Debug: Log received data
     console.log("Received Data:", data);
-
-    // Launch Puppeteer with timeout and error handling
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Recommended for server environments
-      executablePath: puppeteer.executablePath(), // Use the Chromium bundled with Puppeteer
-    });
-
-    const page = await browser.newPage();
-
-    // Set a higher timeout for Puppeteer (60 seconds)
-    await page.setDefaultTimeout(60000);
 
     // Prepare HTML content
     const htmlContent = `
@@ -216,14 +202,16 @@ export async function POST(request: Request) {
 
     // Set content and generate PDF
     console.log("Setting HTML content...");
-    await page.setContent(htmlContent);
+    const file = { content: htmlContent };
     console.log("Generating PDF...");
-    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-
+    const pdfFilePath = "/tmp/application.pdf";
+    await pdf.generatePdf(file, { format: "A4", path: pdfFilePath });
     // Close the browser
-    await browser.close();
+    // Read the file into a buffer
+    const pdfBuffer = await fs.readFile(pdfFilePath);
 
     console.log("PDF generated successfully.");
+
     return new Response(pdfBuffer, {
       headers: {
         "Content-Type": "application/pdf",
@@ -232,11 +220,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Error in PDF generation:", error);
-
-    // Ensure browser is closed in case of an error
-    if (browser) {
-      await browser.close();
-    }
 
     return new Response(
       JSON.stringify({
