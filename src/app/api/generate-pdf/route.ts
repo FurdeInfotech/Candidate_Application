@@ -11,6 +11,7 @@ export async function POST(request: Request) {
   try {
     // Convert FormData to JSON
     const formData = await request.formData();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const data: Record<string, any> = {};
 
     // Extract key-value pairs from FormData
