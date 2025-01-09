@@ -33,12 +33,14 @@ import { computerLanguagesData } from "@/lib/data";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { formatDateToDDMMYYYY } from "@/helpers/formatDateToDDMMYYYY";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type FormData = z.infer<typeof FormSchema>;
 
 function FormComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   // State to track the selected month and year
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -220,6 +222,7 @@ function FormComponent() {
         });
       }
       form.reset()
+      router.replace("/success")
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error(`Failed ${error}`, {
