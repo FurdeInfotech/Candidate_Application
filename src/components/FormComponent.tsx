@@ -220,9 +220,9 @@ function FormComponent() {
           },
           duration: 5000,
         });
+        form.reset();
+        router.replace("/success");
       }
-      form.reset()
-      router.replace("/success")
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error(`Failed ${error}`, {
@@ -265,8 +265,8 @@ function FormComponent() {
         <div className=" flex flex-row justify-between items-center">
           <h1 className=" font-semibold">Personal Details</h1>
           <p className="text-neutral-600 md:text-base text-xs">
-            Fields with {" "}
-            <span className="font-bold text-neutral-950">(*)</span> are required.
+            Fields with <span className="font-bold text-neutral-950">(*)</span>{" "}
+            are required.
           </p>
         </div>
 
