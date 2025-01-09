@@ -37,7 +37,7 @@ export function MultipleSelector({
   const [open, setOpen] = React.useState(false);
 
   const handleSetValue = (val: string) => {
-    if (selectedValues.includes(val.toUpperCase())) {
+    if (selectedValues.includes(val)) {
       onChange(selectedValues.filter((item) => item !== val));
     } else {
       onChange([...selectedValues, val]);
