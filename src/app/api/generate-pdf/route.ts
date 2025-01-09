@@ -1,14 +1,13 @@
-import fs from "fs/promises";
-import * as pdf from "html-pdf-node";
+import puppeteer from "puppeteer";
 
 export async function POST(request: Request) {
+  let browser; // Declare browser variable for proper cleanup
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
   const yyyy = today.getFullYear();
 
   const formattedDate = `${dd}/${mm}/${yyyy}`;
-
   try {
     // Convert FormData to JSON
     const formData = await request.formData();
@@ -22,6 +21,17 @@ export async function POST(request: Request) {
 
     // Debug: Log received data
     console.log("Received Data:", data);
+
+    // Launch Puppeteer with timeout and error handling
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Recommended for server environments
+    });
+
+    const page = await browser.newPage();
+
+    // Set a higher timeout for Puppeteer (60 seconds)
+    await page.setDefaultTimeout(60000);
 
     // Prepare HTML content
     const htmlContent = `
@@ -202,16 +212,14 @@ export async function POST(request: Request) {
 
     // Set content and generate PDF
     console.log("Setting HTML content...");
-    const file = { content: htmlContent };
+    await page.setContent(htmlContent);
     console.log("Generating PDF...");
-    const pdfFilePath = "/tmp/application.pdf";
-    await pdf.generatePdf(file, { format: "A4", path: pdfFilePath });
+    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+
     // Close the browser
-    // Read the file into a buffer
-    const pdfBuffer = await fs.readFile(pdfFilePath);
+    await browser.close();
 
     console.log("PDF generated successfully.");
-
     return new Response(pdfBuffer, {
       headers: {
         "Content-Type": "application/pdf",
@@ -220,6 +228,11 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Error in PDF generation:", error);
+
+    // Ensure browser is closed in case of an error
+    if (browser) {
+      await browser.close();
+    }
 
     return new Response(
       JSON.stringify({
