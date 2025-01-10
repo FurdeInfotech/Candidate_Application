@@ -1,7 +1,18 @@
-import { NextResponse } from 'next/server';
-import * as htmlPdf from 'html-pdf';
+import { NextResponse, type NextRequest } from "next/server";
+import puppeteer, { type Browser } from "puppeteer";
+import puppeteerCore, { type Browser as BrowserCore } from "puppeteer-core";
+import chromium from "@sparticuz/chromium-min";
+
+export const dynamic = "force-dynamic";
+export const maxDuration = 60;
+
 
 export async function POST(request: Request) {
+
+
+  let browser: Browser | BrowserCore | null = null; // Declare browser for cleanup
+
+
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
@@ -21,6 +32,8 @@ export async function POST(request: Request) {
 
     // Debug: Log received data
     console.log("Received Data:", data);
+
+    
 
     // Prepare HTML content
     const htmlContent = `
@@ -199,31 +212,57 @@ export async function POST(request: Request) {
 
     `;
 
-      // PDF generation with html-pdf
-      const options: htmlPdf.CreateOptions = { format: 'A4' };
 
-      htmlPdf.create(htmlContent, options).toBuffer((err, buffer) => {
-        if (err) {
-          console.error('Error generating PDF:', err);
-          return new NextResponse(
-            JSON.stringify({ error: "Failed to generate PDF", details: err }),
-            { status: 500 }
-          );
-        }
-  
-        // Send PDF as response
-        return new NextResponse(buffer, {
-          headers: {
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; filename=application.pdf',
-          },
-        });
-      });
-    } catch (error) {
-      console.error('Error in PDF generation:', error);
-      return new NextResponse(
-        JSON.stringify({ error: 'Failed to generate PDF', details: error }),
-        { status: 500 }
+     // Launch Puppeteer based on environment
+     if (process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production") {
+      const executablePath = await chromium.executablePath(
+        "https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar"
       );
+
+      browser = await puppeteerCore.launch({
+        executablePath,
+        args: chromium.args,
+        headless: chromium.headless,
+        defaultViewport: chromium.defaultViewport,
+      });
+    } else {
+      browser = await puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
     }
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+   
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+    });
+    // Close the browser
+    await browser.close();
+
+    console.log("PDF generated successfully.");
+
+  return new Response(pdfBuffer, {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=application.pdf`,
+      },
+    });
+  } catch (error) {
+    console.error("Error in PDF generation:", error);
+
+    // Ensure browser is closed in case of an error
+    if (browser) {
+      await browser.close();
+    }
+
+    return new Response(
+      JSON.stringify({
+        error: "Failed to generate PDF",
+        details: error,
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
   }
+}
