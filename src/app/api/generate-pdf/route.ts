@@ -201,7 +201,7 @@ export async function POST(request: Request) {
       <p style="margin-top: 5px">14. Salary Expectations: <span>${
         data.salary
       }</span></p>
-      <p style="margin-top: 6px">15. Capable to do Works: <span>${
+      <p style="margin-top: 5px">15. Capable to do Works: <span>${
         data.capableToDoWork
       }</span></p>
     
