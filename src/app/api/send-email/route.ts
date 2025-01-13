@@ -17,8 +17,8 @@ export async function POST(request: Request) {
     const base64Pdf = Buffer.from(pdfBuffer).toString("base64"); // Ensure buffer is encoded to Base64
 
     const { data, error } = await resend.emails.send({
-      from: "New Application Form Received <onboarding@resend.dev>",
-      to: "vasudhafurdeinfotech@gmail.com",
+      from: "New Application Form Received <info@furdeinfotech.com>",
+      to: "info@furdeinfotech.com",
       subject: `Job Application Form Received From ${name}`,
       replyTo: email,
       text: `Attached is the job application form of ${name}.`,

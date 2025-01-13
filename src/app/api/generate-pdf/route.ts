@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     // Prepare HTML content
     const htmlContent = `
-    <html>
+  <html>
   <head>
     <style>
       body {
@@ -76,15 +76,15 @@ export async function POST(request: Request) {
     </style>
   </head>
   <body>
-    <div style="border: 2px solid #000; padding: 20px 20px; min-height: 1035px;">
-      <h1 style="text-align: center">Candidate Application Form</h1>
+    <div style="border: 2px solid #000; padding: 5px 20px 1px 20px; min-height: 1035px;">
+      <h1 style="text-align: center; margin-top: -5px;">Candidate Application Form</h1>
 
       <p style="text-align: right">Date: ${formattedDate}</p>
 
       <p>Reference: <span>${data.referredBy}</span> </p>
-      <br />
+
       
-        <p>1. Name: <span>${data.name}</span></p>
+        <p style="margin-top: 35px;">1. Name: <span>${data.name}</span></p>
         <p style="margin-top: 20px">2. Email ID: <span>${data.email}</span></p>
      
       <div
